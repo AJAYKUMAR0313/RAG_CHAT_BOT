@@ -14,7 +14,7 @@ import os
 # Configure page
 st.set_page_config(
     page_title="Paves Technologies AI Assistant",
-    page_icon="🏗️",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -45,49 +45,49 @@ def initialize_components():
         st.error(f"Error initializing components: {str(e)}")
         st.stop()
 
-def process_uploaded_files(uploaded_files):
-    """Process uploaded PDF files and add to vector store"""
-    if not uploaded_files:
-        return
+# def process_uploaded_files(uploaded_files):
+#     """Process uploaded PDF files and add to vector store"""
+#     if not uploaded_files:
+#         return
     
-    pdf_processor = PDFProcessor()
-    progress_bar = st.progress(0)
-    status_text = st.empty()
+#     pdf_processor = PDFProcessor()
+#     progress_bar = st.progress(0)
+#     status_text = st.empty()
     
-    for i, uploaded_file in enumerate(uploaded_files):
-        if uploaded_file.name in st.session_state.documents_processed:
-            st.warning(f"📄 {uploaded_file.name} already processed. Skipping...")
-            continue
+#     for i, uploaded_file in enumerate(uploaded_files):
+#         if uploaded_file.name in st.session_state.documents_processed:
+#             st.warning(f"📄 {uploaded_file.name} already processed. Skipping...")
+#             continue
             
-        status_text.text(f"Processing {uploaded_file.name}...")
+#         status_text.text(f"Processing {uploaded_file.name}...")
         
-        try:
-            # Save uploaded file temporarily
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-                tmp_file.write(uploaded_file.getvalue())
-                tmp_file_path = tmp_file.name
+#         try:
+#             # Save uploaded file temporarily
+#             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+#                 tmp_file.write(uploaded_file.getvalue())
+#                 tmp_file_path = tmp_file.name
             
-            # Extract text from PDF
-            text_chunks = pdf_processor.extract_text_chunks(tmp_file_path, uploaded_file.name)
+#             # Extract text from PDF
+#             text_chunks = pdf_processor.extract_text_chunks(tmp_file_path, uploaded_file.name)
             
-            if text_chunks:
-                # Add to vector store
-                st.session_state.vector_store.add_documents(text_chunks)
-                st.session_state.documents_processed.append(uploaded_file.name)
-                st.success(f"✅ Successfully processed {uploaded_file.name} ({len(text_chunks)} chunks)")
-            else:
-                st.warning(f"⚠️ No text extracted from {uploaded_file.name}")
+#             if text_chunks:
+#                 # Add to vector store
+#                 st.session_state.vector_store.add_documents(text_chunks)
+#                 st.session_state.documents_processed.append(uploaded_file.name)
+#                 st.success(f"✅ Successfully processed {uploaded_file.name} ({len(text_chunks)} chunks)")
+#             else:
+#                 st.warning(f"⚠️ No text extracted from {uploaded_file.name}")
             
-            # Clean up temporary file
-            os.unlink(tmp_file_path)
+#             # Clean up temporary file
+#             os.unlink(tmp_file_path)
             
-        except Exception as e:
-            st.error(f"❌ Error processing {uploaded_file.name}: {str(e)}")
+#         except Exception as e:
+#             st.error(f"❌ Error processing {uploaded_file.name}: {str(e)}")
         
-        progress_bar.progress((i + 1) / len(uploaded_files))
+#         progress_bar.progress((i + 1) / len(uploaded_files))
     
-    status_text.empty()
-    progress_bar.empty()
+#     status_text.empty()
+#     progress_bar.empty()
 
 def main():
     # Initialize components
@@ -98,55 +98,55 @@ def main():
     with col1:
         st.image("assets/paves_logo.svg", width=80)
     with col2:
-        st.title("🏗️ Paves Technologies AI Assistant")
+        st.title(" Paves Technologies AI Assistant")
         st.markdown("*Your intelligent companion for company documentation and knowledge*")
     
     # Sidebar for document management
-    with st.sidebar:
-        st.header("📚 Document Management")
+    # with st.sidebar:
+    #     st.header("📚 Document Management")
         
-        # File upload
-        uploaded_files = st.file_uploader(
-            "Upload PDF Documents",
-            type=["pdf"],
-            accept_multiple_files=True,
-            help="Upload company documents, manuals, or reports to enhance the AI's knowledge base"
-        )
+    #     # File upload
+    #     uploaded_files = st.file_uploader(
+    #         "Upload PDF Documents",
+    #         type=["pdf"],
+    #         accept_multiple_files=True,
+    #         help="Upload company documents, manuals, or reports to enhance the AI's knowledge base"
+    #     )
         
-        if uploaded_files:
-            if st.button("🔄 Process Documents", type="primary"):
-                process_uploaded_files(uploaded_files)
+    #     if uploaded_files:
+    #         if st.button("🔄 Process Documents", type="primary"):
+    #             process_uploaded_files(uploaded_files)
         
-        st.divider()
+    #     st.divider()
         
-        # Document status
-        st.subheader("📋 Processed Documents")
-        if st.session_state.documents_processed:
-            for doc in st.session_state.documents_processed:
-                st.text(f"✅ {doc}")
-        else:
-            st.info("No documents processed yet")
+    #     # Document status
+    #     st.subheader("📋 Processed Documents")
+    #     if st.session_state.documents_processed:
+    #         for doc in st.session_state.documents_processed:
+    #             st.text(f"✅ {doc}")
+    #     else:
+    #         st.info("No documents processed yet")
         
-        # Clear documents
-        if st.session_state.documents_processed:
-            if st.button("🗑️ Clear All Documents", type="secondary"):
-                st.session_state.vector_store = VectorStore()
-                st.session_state.documents_processed = []
-                st.session_state.messages = []
-                st.rerun()
+    #     # Clear documents
+    #     if st.session_state.documents_processed:
+    #         if st.button("🗑️ Clear All Documents", type="secondary"):
+    #             st.session_state.vector_store = VectorStore()
+    #             st.session_state.documents_processed = []
+    #             st.session_state.messages = []
+    #             st.rerun()
         
-        st.divider()
+    #     st.divider()
         
-        # Company information
-        st.markdown("""
-        ### 🏢 About Paves Technologies
-        Your AI assistant is specialized in Paves Technologies' 
-        operations, projects, and documentation. Upload relevant 
-        documents to enhance response accuracy.
-        """)
+    #     # Company information
+    #     st.markdown("""
+    #     ### 🏢 About Paves Technologies
+    #     Your AI assistant is specialized in Paves Technologies' 
+    #     operations, projects, and documentation. Upload relevant 
+    #     documents to enhance response accuracy.
+    #     """)
     
     # Main chat interface
-    st.header("💬 Chat with Your Documents")
+    st.header("💬 Company related queries")
     
     # Display chat messages
     for message in st.session_state.messages:
